@@ -1,0 +1,160 @@
+openapi: 3.0.3
+info:
+  title: Pizza Orders API
+  version: 0.0.1
+  description: API для управления заказами пиццы с примерами валидаций
+#servers:
+#  - url: http://localhost:8080/api/v1
+
+paths:
+  /orders:
+    get:
+      tags:
+        - Orders
+      summary: Получить список заказов
+      description: Возвращает список заказов с пагинацией и фильтрацией
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, preparing, in_delivery, delivered, cancelled]
+          description: Фильтр по статусу заказа
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+          description: Количество элементов на странице
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+          description: Смещение для пагинации
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+          description: Сортировка по времени создания
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrdersResponse'
+        '400':
+          description: Неверные параметры запроса
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    Order:
+      type: object
+      required:
+        - pizzas
+        - total_price
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        status:
+          type: string
+          enum: [pending, preparing, in_delivery, delivered, cancelled]
+          example: "preparing"
+        pizzas:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pizza'
+          minItems: 1
+          maxItems: 10
+        delivery_address:
+          type: string
+          minLength: 10
+          maxLength: 200
+          example: "ул. Пушкина, д.10, кв.25"
+        total_price:
+          type: number
+          format: float
+          minimum: 1.0
+          example: 500
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    Pizza:
+      type: object
+      required:
+        - name
+        - size
+        - quantity
+      properties:
+        name:
+          type: string
+          minLength: 3
+          maxLength: 50
+          example: "Маргарита"
+        size:
+          type: string
+          enum: [small, medium, large]
+          example: "medium"
+        quantity:
+          type: integer
+          minimum: 1
+          maximum: 5
+          example: 2
+        price:
+          type: number
+          format: float
+          minimum: 1.0
+          example: 500
+
+    OrdersResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Order'
+        total:
+          type: integer
+          example: 100
+        limit:
+          type: integer
+          example: 10
+        offset:
+          type: integer
+          example: 0
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+          required:
+            - code
+            - message
