@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"log/slog"
 	"os"
 	"os/signal"
@@ -20,6 +22,7 @@ func main() {
 	a, err := app.New()
 	if err != nil {
 		slog.Error("Failed to initialize application", "error", err)
+
 		os.Exit(1)
 	}
 
@@ -36,17 +39,13 @@ func main() {
 	})
 
 	g.Go(func() error {
-		select {
-		case <-ctxErrGr.Done():
-			err = ctxErrGr.Err()
-			slog.Debug("err group chan done", "error", err)
-		case <-ctxSignal.Done():
-			err = ctxSignal.Err()
-			slog.Debug("signal chan ctxSignal done", "error", err)
-		}
+		<-ctxErrGr.Done()
+		reason := ctxErrGr.Err()
+		slog.Debug("Initiating shutdown", "reason", reason)
 
 		shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 5*time.Second)
 		defer shutdownCancel()
+
 		errSh := a.Stop(shutdownCtx)
 		if errSh != nil {
 			slog.Error("Failed to shutdown server gracefully", "error", errSh)
@@ -56,11 +55,13 @@ func main() {
 
 		slog.Debug("Application shutdown complete")
 
-		return err
+		return reason
 	})
 
-	if err = g.Wait(); err != nil {
-		slog.Error("Exit reason", "error", err)
+	if err = g.Wait(); err != nil && !errors.Is(err, context.Canceled) {
+		slog.Error("Application terminated with error", "error", err)
+
+		os.Exit(1)
 	}
 
 	slog.Info("Application exited successfully")
