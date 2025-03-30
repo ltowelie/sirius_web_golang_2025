@@ -16,7 +16,7 @@ import (
 )
 
 func main() {
-	ctxSignal, cancel := signal.NotifyContext(context.Background(), os.Interrupt, os.Kill, syscall.SIGTERM)
+	ctxSignal, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer cancel()
 
 	a, err := app.New()
