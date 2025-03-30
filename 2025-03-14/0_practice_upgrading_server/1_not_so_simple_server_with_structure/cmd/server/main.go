@@ -26,10 +26,10 @@ func main() {
 	g, ctxErrGr := errgroup.WithContext(ctxSignal)
 
 	g.Go(func() error {
-		slog.Debug("starting app")
+		slog.Debug("Starting application")
 		err = a.Start()
 		if err != nil {
-			return err
+			return fmt.Errorf("application error: %w", err)
 		}
 
 		return nil
@@ -49,8 +49,12 @@ func main() {
 		defer shutdownCancel()
 		errSh := a.Stop(shutdownCtx)
 		if errSh != nil {
-			slog.Error("Failed to shutdown http server", "error", errSh)
+			slog.Error("Failed to shutdown server gracefully", "error", errSh)
+
+			return fmt.Errorf("shutdown error: %w", errSh)
 		}
+
+		slog.Debug("Application shutdown complete")
 
 		return err
 	})
@@ -58,4 +62,6 @@ func main() {
 	if err = g.Wait(); err != nil {
 		slog.Error("Exit reason", "error", err)
 	}
+
+	slog.Info("Application exited successfully")
 }
