@@ -32,24 +32,24 @@ const (
 
 // Order А с этой моделью как раз и будем работать
 type Order struct {
-	ID         int
-	CreatedAt  time.Time
-	UpdatedAt  time.Time
-	DeletedAt  time.Time
-	Type       PizzaType
-	Size       PizzaSize
-	Quantity   int
-	CustomerID int
-	Status     OrderStatus
+	ID         int         `json:"id"`
+	CreatedAt  time.Time   `json:"created_at"`
+	UpdatedAt  time.Time   `json:"updated_at"`
+	DeletedAt  time.Time   `json:"deleted_at"`
+	Type       PizzaType   `json:"type"`
+	Size       PizzaSize   `json:"size"`
+	Quantity   int         `json:"quantity"`
+	CustomerID int         `json:"customer_id"`
+	Status     OrderStatus `json:"status"`
 }
 
 type Customer struct {
-	ID        int
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt time.Time
-	FirstName string
-	LastName  string
-	Address   string
-	Email     string
+	ID        int       `json:"id"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	DeletedAt time.Time `json:"deleted_at"`
+	FirstName string    `json:"first_name"`
+	LastName  string    `json:"last_name"`
+	Address   string    `json:"address"`
+	Email     string    `json:"email"`
 }

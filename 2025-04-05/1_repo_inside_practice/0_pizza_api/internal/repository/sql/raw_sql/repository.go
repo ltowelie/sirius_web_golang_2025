@@ -7,7 +7,7 @@ import (
 
 	"repository_example/internal/config"
 	"repository_example/internal/models"
-	sqlite2 "repository_example/internal/repository/sql/raw_sql/sqlite"
+	"repository_example/internal/repository/sql/raw_sql/sqlite"
 )
 
 type OrderRepository interface {
@@ -25,12 +25,12 @@ func NewRepository(ctx context.Context, cfg *config.Repo) (*Repository, error) {
 
 	switch cfg.DB {
 	case "sqlite":
-		provider, err := sqlite2.NewDBProvider(cfg.DBConn)
+		provider, err := sqlite.NewDBProvider(cfg.DBConn)
 		if err != nil {
 			return nil, fmt.Errorf("failed to create sqlite provider: %w", err)
 		}
 
-		orderRepo := sqlite2.NewOrderRepository(provider)
+		orderRepo := sqlite.NewOrderRepository(provider)
 
 		return &Repository{
 			Orders: orderRepo,

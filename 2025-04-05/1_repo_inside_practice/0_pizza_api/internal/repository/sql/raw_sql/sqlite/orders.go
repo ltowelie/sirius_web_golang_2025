@@ -15,7 +15,7 @@ import (
 // для дополнительной сохранности (и, возможно, безопасности)
 const (
 	sqlGetOrderByID = `SELECT id, type, size, quantity, customer_id, status, created_at, updated_at
-                      	FROM orders WHERE id = ?`
+                      	FROM orders WHERE id = ? AND deleted_at IS NULL`
 
 	sqlCreateOrder = `INSERT INTO orders (type, size, quantity, customer_id, status, created_at, updated_at)
 						VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id, created_at, updated_at`
