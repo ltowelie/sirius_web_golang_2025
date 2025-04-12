@@ -36,6 +36,11 @@ cp .env.example .env
 
 ## Проверим наш проект
 
+### Проверим на соответствие лучшиим практикам создания `Dockerfile` с помощью `hadolint`:
+```shell
+docker run --rm -i hadolint/hadolint < Dockerfile
+```
+
 ### Проверим на уязвимости с помощью trivy наш проект, передав путь к файловой системе
 ```shell
 trivy fs .
