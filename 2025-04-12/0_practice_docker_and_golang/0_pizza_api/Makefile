@@ -30,12 +30,16 @@ run: build
 
 docker_alpine:
 	docker build --file Dockerfile_alpine -t "${IMAGE_NAME_ALPINE}:${VERSION}" .
-	docker run --env-file .env -p 8080:8080 ${PROJECT_PKG}
+	docker run --env-file .env -p 8080:8080 "${IMAGE_NAME_ALPINE}:${VERSION}"
 
 docker_distroless:
 	docker build --file Dockerfile_distroless -t "${IMAGE_NAME_SCRATCH}:${VERSION}" .
-	docker run -dp 8080:8080 ${PROJECT_PKG}
+	docker run -dp 8080:8080 "${IMAGE_NAME_ALPINE}:${VERSION}"
 
 docker_scratch:
 	docker build --file Dockerfile_scratch -t "${IMAGE_NAME_DISTROLESS}:${VERSION}" .
-	docker run -dp 8080:8080 ${PROJECT_PKG}
+	docker run -dp 8080:8080 "${IMAGE_NAME_ALPINE}:${VERSION}"
+
+docker_bookworm:
+	docker build --file Dockerfile_bookworm -t "${IMAGE_NAME_BOOKWORM}:${VERSION}" .
+	docker run --env-file .env -p 8080:8080 "${IMAGE_NAME_BOOKWORM}:${VERSION}"
