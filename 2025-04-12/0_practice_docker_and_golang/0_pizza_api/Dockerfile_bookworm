@@ -5,13 +5,13 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
+# Для запуска на alpine - CGO_ENABLED=0 нужно, чтобы бинарник запустился
 RUN go build -o app ./cmd/app/main.go
 
 
 # Этап создания конечного образа
-FROM alpine:3.21
-USER nobody:nobody
-WORKDIR /app/
+FROM debian:bookworm-slim
+WORKDIR /app
 COPY --from=builder /app/app .
-COPY --from=builder /app/db/sqlite .
+COPY --from=builder /app/db/sqlite ./db/sqlite
 CMD ["./app"]

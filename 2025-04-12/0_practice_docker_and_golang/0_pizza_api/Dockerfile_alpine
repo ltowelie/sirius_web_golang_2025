@@ -10,8 +10,7 @@ RUN go build -o app ./cmd/app/main.go
 
 # Этап создания конечного образа
 FROM alpine:3.21
-USER nobody:nobody
 WORKDIR /app/
 COPY --from=builder /app/app .
-COPY --from=builder /app/db/sqlite .
+COPY --from=builder /app/db/sqlite ./db/sqlite
 CMD ["./app"]
