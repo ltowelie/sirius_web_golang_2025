@@ -1,0 +1,263 @@
+basePath: /api/
+definitions:
+  pizza_api_internal_models.Order:
+    description: Модель заказа пиццы
+    properties:
+      created_at:
+        description: Время создания заказа
+        example: "2025-01-01T12:00:00Z"
+        type: string
+      customer_id:
+        description: ID клиента
+        example: 42
+        type: integer
+      deleted_at:
+        description: Время удаления
+        type: string
+      id:
+        description: Уникальный идентификатор заказа
+        example: 1
+        type: integer
+      quantity:
+        description: Количество пицц в заказе
+        example: 2
+        type: integer
+      size:
+        allOf:
+        - $ref: '#/definitions/pizza_api_internal_models.PizzaSize'
+        description: Размер пиццы
+        example: medium
+      status:
+        allOf:
+        - $ref: '#/definitions/pizza_api_internal_models.OrderStatus'
+        description: Статус заказа
+        example: new
+      type:
+        allOf:
+        - $ref: '#/definitions/pizza_api_internal_models.PizzaType'
+        description: Тип пиццы
+        example: pepperoni
+      updated_at:
+        description: Время последнего обновления
+        example: "2025-01-01T12:30:00Z"
+        type: string
+    type: object
+  pizza_api_internal_models.OrderStatus:
+    description: Статус выполнения заказа
+    enum:
+    - new
+    - preparing
+    - delivering
+    - delivered
+    - cancelled
+    type: string
+    x-enum-comments:
+      Cancelled: Отменен
+      Delivered: Доставлен
+      Delivering: Доставляется
+      New: Новый заказ
+      Preparing: Готовится
+    x-enum-varnames:
+    - New
+    - Preparing
+    - Delivering
+    - Delivered
+    - Cancelled
+  pizza_api_internal_models.PizzaSize:
+    description: Размер заказываемой пиццы
+    enum:
+    - small
+    - medium
+    - large
+    type: string
+    x-enum-comments:
+      Large: Большая (35 см)
+      Medium: Средняя (30 см)
+      Small: Маленькая (25 см)
+    x-enum-varnames:
+    - Small
+    - Medium
+    - Large
+  pizza_api_internal_models.PizzaType:
+    description: Доступные виды пиццы
+    enum:
+    - margarita
+    - marinara
+    - pepperoni
+    type: string
+    x-enum-comments:
+      Margarita: Маргарита
+      Marinara: Маринара
+      Pepperoni: Пепперони
+    x-enum-varnames:
+    - Margarita
+    - Marinara
+    - Pepperoni
+host: localhost:8080
+info:
+  contact:
+    email: support@supapizza.com
+    name: Pizzeria support
+    url: http://www.supapiza.com/support
+  description: API документация для пиццерии
+  title: API нашей пиццерии
+  version: 0.0.1
+paths:
+  /api/v1/orders/{id}:
+    delete:
+      description: Удаляет заказ по ID
+      parameters:
+      - description: ID заказа
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Неверный ID
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+        "404":
+          description: Заказ не найден
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+        "500":
+          description: Ошибка сервера
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+      summary: Удалить заказ
+      tags:
+      - orders
+    put:
+      consumes:
+      - application/json
+      description: Обновляет существующий заказ по ID
+      parameters:
+      - description: ID заказа
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Обновленные данные
+        in: body
+        name: order
+        required: true
+        schema:
+          $ref: '#/definitions/pizza_api_internal_models.Order'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Неверный запрос
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+        "404":
+          description: Заказ не найден
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+        "500":
+          description: Ошибка сервера
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+      summary: Обновить заказ
+      tags:
+      - orders
+  /v1/orders:
+    post:
+      consumes:
+      - application/json
+      description: Создает новый заказ
+      parameters:
+      - description: Заказ
+        in: body
+        name: order
+        required: true
+        schema:
+          $ref: '#/definitions/pizza_api_internal_models.Order'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/pizza_api_internal_models.Order'
+        "400":
+          description: Неверный формат данных
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+        "500":
+          description: Ошибка сервера
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+      summary: Создать новый заказ
+      tags:
+      - orders
+  /v1/orders/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Получает информацию о заказе по его идентификатору
+      parameters:
+      - description: ID заказа
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/pizza_api_internal_models.Order'
+        "400":
+          description: Неверный формат ID
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+        "500":
+          description: Ошибка сервера
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+      summary: Получить заказ по ID
+      tags:
+      - orders
+schemes:
+- http
+- https
+swagger: "2.0"

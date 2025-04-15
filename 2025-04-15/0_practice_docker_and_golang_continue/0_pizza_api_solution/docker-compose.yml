@@ -1,0 +1,61 @@
+services:
+  app-alpine:
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: Dockerfile_alpine
+    profiles: ["alpine"]
+
+  app-distroless:
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: Dockerfile_distroless
+    profiles: ["distroless"]
+
+  app-scratch:
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: Dockerfile_scratch
+    profiles: ["scratch"]
+
+  app-debian:
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: Dockerfile_bookworm
+    profiles: ["debian"]
+
+  app-alpine-debug:
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: Dockerfile_alpine_debug
+    profiles: ["alpine_debug"]
+
+  app-alpine-air:
+    build:
+      context: .
+      dockerfile: Dockerfile_alpine_air
+    # Прокидываем папку с исходным кодом, за изменениями которого будет следить air
+    volumes:
+      - ./:/app
+    profiles: ["alpine_air"]
+
+  app-alpine-air-debug:
+    build:
+      context: .
+      dockerfile: Dockerfile_alpine_air_debug
+    # Прокидываем папку с исходным кодом, за изменениями которого будет следить air
+    volumes:
+      - ./:/app
+    profiles: ["alpine_air_debug"]
+
+volumes:
+  db:

@@ -1,0 +1,7 @@
+build
+db
+Dockerfile*
+.env
+.env.example
+readme.md
+.idea

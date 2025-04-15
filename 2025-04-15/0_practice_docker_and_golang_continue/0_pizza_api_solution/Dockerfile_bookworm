@@ -1,0 +1,20 @@
+# Этап сборки
+FROM golang:1.24-bookworm AS builder
+RUN apt update && \
+    apt install make
+WORKDIR /app
+RUN mkdir -p db/sqlite
+COPY go.mod go.sum ./
+RUN go mod download
+COPY . .
+# Для запуска на alpine - CGO_ENABLED=0 нужно, чтобы бинарник запустился
+RUN make build
+
+
+# Этап создания конечного образа
+FROM debian:bookworm-slim
+USER nobody:nobody
+WORKDIR /app
+COPY --from=builder /app/build/app .
+COPY --from=builder /app/db/sqlite ./db/sqlite
+CMD ["./app"]

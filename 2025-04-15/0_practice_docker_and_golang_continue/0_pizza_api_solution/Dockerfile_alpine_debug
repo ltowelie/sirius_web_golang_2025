@@ -1,0 +1,22 @@
+# Этап сборки
+FROM golang:1.24-alpine AS builder
+RUN apk update --no-cache && \
+    apk add make git
+WORKDIR /app
+RUN mkdir -p db/sqlite
+COPY go.mod go.sum ./
+RUN go mod download
+RUN go install github.com/go-delve/delve/cmd/dlv@v1.24.2
+COPY . .
+RUN make build_debug
+
+
+# Этап создания конечного образа
+FROM alpine:3.21
+USER nobody:nobody
+WORKDIR /app
+COPY --from=builder /go/bin/dlv .
+COPY --from=builder /app/build/app .
+COPY --from=builder /app/db/sqlite ./db/sqlite
+# После "--" идут аргументы приложения
+CMD ["./dlv", "exec", "./app", "--headless", "--listen=:2345", "--api-version=2", "--"]
