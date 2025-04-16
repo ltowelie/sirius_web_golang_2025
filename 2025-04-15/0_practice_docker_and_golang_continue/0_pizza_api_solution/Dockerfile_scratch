@@ -12,8 +12,10 @@ RUN make build
 
 # Этап создания конечного образа
 FROM scratch
+COPY --from=builder /etc/passwd /etc/passwd
+COPY --from=builder /etc/group /etc/group
 USER nobody:nobody
 WORKDIR /app
-COPY --from=builder /app/build/app .
-COPY --from=builder /app/db/sqlite ./db/sqlite
+COPY --from=builder --chown=nobody /app/build/app .
+COPY --from=builder --chown=nobody /app/db/sqlite ./db/sqlite
 CMD ["./app"]

@@ -52,3 +52,12 @@ docker_bookworm:
 docker_alpine_debug:
 	docker build --file Dockerfile_alpine_debug -t "${IMAGE_NAME_ALPINE}:${VERSION}" .
 	docker run --env-file .env -p 8080:8080 -p 2345:2345 "${IMAGE_NAME_ALPINE}:${VERSION}"
+
+docker_compose_alpine_air:
+	docker compose --profile alpine_air up
+
+docker_compose_alpine_debug:
+	docker compose --profile alpine_debug up
+
+docker_compose_alpine_air_debug:
+	docker compose --profile alpine_air_debug up

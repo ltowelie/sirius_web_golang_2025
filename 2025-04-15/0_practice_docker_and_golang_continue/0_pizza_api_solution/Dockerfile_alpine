@@ -14,6 +14,6 @@ RUN make build
 FROM alpine:3.21
 USER nobody:nobody
 WORKDIR /app
-COPY --from=builder /app/build/app .
-COPY --from=builder /app/db/sqlite ./db/sqlite
+COPY --from=builder --chown=nobody /app/build/app .
+COPY --from=builder --chown=nobody /app/db/sqlite ./db/sqlite
 CMD ["./app"]

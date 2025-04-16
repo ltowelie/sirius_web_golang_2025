@@ -5,6 +5,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile_alpine
+    volumes:
+      - db:/app/db/sqlite
+    ports:
+      - "8080:8080"
     profiles: ["alpine"]
 
   app-distroless:
@@ -13,6 +17,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile_distroless
+    volumes:
+      - db:/app/db/sqlite
+    ports:
+      - "8080:8080"
     profiles: ["distroless"]
 
   app-scratch:
@@ -21,6 +29,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile_scratch
+    volumes:
+      - db:/app/db/sqlite
+    ports:
+      - "8080:8080"
     profiles: ["scratch"]
 
   app-debian:
@@ -29,6 +41,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile_bookworm
+    volumes:
+      - db:/app/db/sqlite
+    ports:
+      - "8080:8080"
     profiles: ["debian"]
 
   app-alpine-debug:
@@ -37,24 +53,36 @@ services:
     build:
       context: .
       dockerfile: Dockerfile_alpine_debug
+    volumes:
+      - db:/app/db/sqlite
+    ports:
+      - "8080:8080"
     profiles: ["alpine_debug"]
 
   app-alpine-air:
     build:
       context: .
       dockerfile: Dockerfile_alpine_air
+    ports:
+      - "8080:8080"
+      - "2345:2345"
     # Прокидываем папку с исходным кодом, за изменениями которого будет следить air
     volumes:
       - ./:/app
+      - db:/app/db/sqlite
     profiles: ["alpine_air"]
 
   app-alpine-air-debug:
     build:
       context: .
       dockerfile: Dockerfile_alpine_air_debug
+    ports:
+      - "8080:8080"
+      - "2345:2345"
     # Прокидываем папку с исходным кодом, за изменениями которого будет следить air
     volumes:
       - ./:/app
+      - db:/app/db/sqlite
     profiles: ["alpine_air_debug"]
 
 volumes:

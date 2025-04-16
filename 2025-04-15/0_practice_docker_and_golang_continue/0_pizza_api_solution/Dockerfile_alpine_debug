@@ -16,7 +16,7 @@ FROM alpine:3.21
 USER nobody:nobody
 WORKDIR /app
 COPY --from=builder /go/bin/dlv .
-COPY --from=builder /app/build/app .
-COPY --from=builder /app/db/sqlite ./db/sqlite
+COPY --from=builder --chown=nobody /app/build/app .
+COPY --from=builder --chown=nobody /app/db/sqlite ./db/sqlite
 # После "--" идут аргументы приложения
 CMD ["./dlv", "exec", "./app", "--headless", "--listen=:2345", "--api-version=2", "--"]
