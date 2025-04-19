@@ -1,0 +1,39 @@
+services:
+  app-scratch:
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: Dockerfile_scratch
+    volumes:
+      - ./db:/app/db/sqlite
+    ports:
+      - "8080:8080"
+    profiles: [ "production" ]
+
+  app-alpine-air:
+    build:
+      context: .
+      dockerfile: Dockerfile_alpine_air
+    ports:
+      - "8080:8080"
+      - "2345:2345"
+    volumes:
+      - ./:/app
+      - ./db:/app/db/sqlite
+    profiles: [ "develop_air" ]
+
+  app-alpine-air-debug:
+    build:
+      context: .
+      dockerfile: Dockerfile_alpine_air_debug
+    ports:
+      - "8080:8080"
+      - "2345:2345"
+    volumes:
+      - ./:/app
+      - ./db:/app/db/sqlite
+    profiles: [ "develop_air_debug" ]
+
+volumes:
+  db:

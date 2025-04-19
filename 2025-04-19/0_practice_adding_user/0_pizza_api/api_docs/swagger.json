@@ -1,0 +1,386 @@
+{
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "swagger": "2.0",
+    "info": {
+        "description": "API документация для пиццерии",
+        "title": "API нашей пиццерии",
+        "contact": {
+            "name": "Pizzeria support",
+            "url": "http://www.supapiza.com/support",
+            "email": "support@supapizza.com"
+        },
+        "version": "0.0.1"
+    },
+    "host": "localhost:8080",
+    "basePath": "/api/",
+    "paths": {
+        "/api/v1/orders/{id}": {
+            "put": {
+                "description": "Обновляет существующий заказ по ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "orders"
+                ],
+                "summary": "Обновить заказ",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID заказа",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Обновленные данные",
+                        "name": "order",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/pizza_api_internal_models.Order"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "description": "Неверный запрос",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "error": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Заказ не найден",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "error": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Ошибка сервера",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "error": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Удаляет заказ по ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "orders"
+                ],
+                "summary": "Удалить заказ",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID заказа",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "description": "Неверный ID",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "error": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Заказ не найден",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "error": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Ошибка сервера",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "error": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/orders": {
+            "post": {
+                "description": "Создает новый заказ",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "orders"
+                ],
+                "summary": "Создать новый заказ",
+                "parameters": [
+                    {
+                        "description": "Заказ",
+                        "name": "order",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/pizza_api_internal_models.Order"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/pizza_api_internal_models.Order"
+                        }
+                    },
+                    "400": {
+                        "description": "Неверный формат данных",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "error": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Ошибка сервера",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "error": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/orders/{id}": {
+            "get": {
+                "description": "Получает информацию о заказе по его идентификатору",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "orders"
+                ],
+                "summary": "Получить заказ по ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID заказа",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/pizza_api_internal_models.Order"
+                        }
+                    },
+                    "400": {
+                        "description": "Неверный формат ID",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "error": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Ошибка сервера",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "error": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "pizza_api_internal_models.Order": {
+            "description": "Модель заказа пиццы",
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "description": "Время создания заказа",
+                    "type": "string",
+                    "example": "2025-01-01T12:00:00Z"
+                },
+                "customer_id": {
+                    "description": "ID клиента",
+                    "type": "integer",
+                    "example": 42
+                },
+                "deleted_at": {
+                    "description": "Время удаления",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "Уникальный идентификатор заказа",
+                    "type": "integer",
+                    "example": 1
+                },
+                "quantity": {
+                    "description": "Количество пицц в заказе",
+                    "type": "integer",
+                    "example": 2
+                },
+                "size": {
+                    "description": "Размер пиццы",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/pizza_api_internal_models.PizzaSize"
+                        }
+                    ],
+                    "example": "medium"
+                },
+                "status": {
+                    "description": "Статус заказа",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/pizza_api_internal_models.OrderStatus"
+                        }
+                    ],
+                    "example": "new"
+                },
+                "type": {
+                    "description": "Тип пиццы",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/pizza_api_internal_models.PizzaType"
+                        }
+                    ],
+                    "example": "pepperoni"
+                },
+                "updated_at": {
+                    "description": "Время последнего обновления",
+                    "type": "string",
+                    "example": "2025-01-01T12:30:00Z"
+                }
+            }
+        },
+        "pizza_api_internal_models.OrderStatus": {
+            "description": "Статус выполнения заказа",
+            "type": "string",
+            "enum": [
+                "new",
+                "preparing",
+                "delivering",
+                "delivered",
+                "cancelled"
+            ],
+            "x-enum-comments": {
+                "Cancelled": "Отменен",
+                "Delivered": "Доставлен",
+                "Delivering": "Доставляется",
+                "New": "Новый заказ",
+                "Preparing": "Готовится"
+            },
+            "x-enum-varnames": [
+                "New",
+                "Preparing",
+                "Delivering",
+                "Delivered",
+                "Cancelled"
+            ]
+        },
+        "pizza_api_internal_models.PizzaSize": {
+            "description": "Размер заказываемой пиццы",
+            "type": "string",
+            "enum": [
+                "small",
+                "medium",
+                "large"
+            ],
+            "x-enum-comments": {
+                "Large": "Большая (35 см)",
+                "Medium": "Средняя (30 см)",
+                "Small": "Маленькая (25 см)"
+            },
+            "x-enum-varnames": [
+                "Small",
+                "Medium",
+                "Large"
+            ]
+        },
+        "pizza_api_internal_models.PizzaType": {
+            "description": "Доступные виды пиццы",
+            "type": "string",
+            "enum": [
+                "margarita",
+                "marinara",
+                "pepperoni"
+            ],
+            "x-enum-comments": {
+                "Margarita": "Маргарита",
+                "Marinara": "Маринара",
+                "Pepperoni": "Пепперони"
+            },
+            "x-enum-varnames": [
+                "Margarita",
+                "Marinara",
+                "Pepperoni"
+            ]
+        }
+    }
+}
