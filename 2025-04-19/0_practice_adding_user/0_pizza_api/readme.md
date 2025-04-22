@@ -25,7 +25,7 @@ swag init -g cmd/app/main.go -o api_docs -parseDependency
 ### Соберите из запустите проект в docker среде для разработки
 ```shell
 source .env
-make docker_alpine VERSION="${VERSION}"
+make docker_compose_develop_air_debug
 ```
 
 
